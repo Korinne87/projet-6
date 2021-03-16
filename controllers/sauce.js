@@ -107,7 +107,7 @@ exports.likeSauce = (req, res, next) => {
     })
         .then(sauce => {
             const sauceUsersLikes = sauce.usersLiked;
-            const sauceUsersDislikes = suce.usersDisliked;
+            const sauceUsersDislikes = sauce.usersDisliked;
             const userLike = req.body.like;
             const userId = req.body.userId;
             console.log(sauce);
@@ -118,5 +118,26 @@ exports.likeSauce = (req, res, next) => {
                 res.status(201).json({message:"ok"});
 
             }
+            if (userLike === -1 & sauceUsersLikes.indexof(userId) < 0) {
+                sauce.likes =+ 1;
+                sauceUsersLikes.push(req.body.userId);
+                res.status(201).json({message:"ok"});
+            }
+            if (userLike === 0 & sauceUsersLikes.indexof(userId) >= 0) {
+                sauce.likes-=1;
+                let userIndex=sauceUsersLikes.indexOf(userId);
+                sauceUsersLikes.splice(userIndex,1);
+                res.status(201).json({message:"ok"});  
+            }
+            if (userLike === 0 & sauceUsersDislikes.indexof(userId) >= 0) {
+                sauce.dislikes-=1;
+                let userIndex=sauceUsersDisLikes.indexOf(userId);
+                sauceUsersDislikes.splice(userIndex,1);
+                res.status(201).json({message:"ok"});  
+            } 
+            else{}
+            sauce.save();
+            console.log(sauce);
         })
-}
+        .catch(error => res.status(404).json({error}));
+};
